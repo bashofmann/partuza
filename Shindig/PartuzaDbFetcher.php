@@ -781,6 +781,8 @@ class PartuzaDbFetcher {
       throw new Exception("Invalid activity: empty title");
     }
     $body = isset($activity['body']) ? $activity['body'] : '';
+    $mediaItems = isset($activity['mediaItems']) ? $activity['mediaItems'] : array();
+    $embeds = isset($activity['embeds']) ? $activity['embeds'] : array();
     $title = mysqli_real_escape_string($this->db, $title);
     $body = mysqli_real_escape_string($this->db, $body);
     $time = time();
@@ -788,7 +790,7 @@ class PartuzaDbFetcher {
     if (! ($activityId = mysqli_insert_id($this->db))) {
       return false;
     }
-    if (count($mediaItems)) {
+    if (is_array($mediaItems)) {
       foreach ($mediaItems as $mediaItem) {
         // Updates the activityId of the media item if the activity is bound with the existing media item.
         if (isset($mediaItem['id']) && isset($mediaItem['albumId'])) {
@@ -802,6 +804,19 @@ class PartuzaDbFetcher {
         }
         $mediaItem['albumId'] = 0;
         $this->createMediaItemInternal($person_id, $app_id, $mediaItem, $activityId);
+      }
+    }
+    if (is_array($embeds)) {
+      foreach($embeds as $embed) {
+        if (isset($embed['gadget'])) {
+          $gadget = mysqli_real_escape_string($this->db, $embed['gadget']);
+          $context = '';
+          if(isset($embed['context'])) {
+            $context = mysqli_real_escape_string($this->db, $embed['context']);
+          }
+          mysqli_query($this->db, "insert into activity_embeds (activity_id, gadget, context) values ($activityId, '$gadget', '$context')");
+          mysqli_insert_id($this->db);
+        }   
       }
     }
     return true;

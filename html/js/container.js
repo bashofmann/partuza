@@ -17,6 +17,22 @@
  * under the License.
  */
 
+var gadgets = gadgets || {};
+
+gadgets.context = {
+    context: {},
+    
+    add: function(iframeId, context) {
+        this.context[iframeId] = context;
+    },
+    get: function(iframeId) {
+        if (this.context[iframeId]) {
+            return this.context[iframeId];
+        }
+        return '';
+    }
+}
+
 /**
  * This class implements the basic OpenSocia container functionality, see the RPC service hooks in the init function as reference
  */
@@ -31,8 +47,17 @@ var Container = Class.extend({
 		gadgets.rpc.register('set_title', this.setTitle);
 		gadgets.rpc.register('requestNavigateTo', this.requestNavigateTo);
         gadgets.rpc.register('requestSendMessage', this.requestSendMessage);
+        gadgets.rpc.register('osapi._handleGadgetRpcMethod', this.handleGadgetRpcMethod);
+        gadgets.rpc.register('ee_gadget_rendered', this.eeGadgetRendered);
 	},
 	
+    eeGadgetRendered: function() {
+        this.callback(gadgets.context.get(this.f));
+    },
+    
+    handleGadgetRpcMethod: function() {
+    },
+    
 	/**
 	 * Changes the height of the iframe that contains the gadget
 	 */

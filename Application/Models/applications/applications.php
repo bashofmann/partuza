@@ -157,10 +157,7 @@ class applicationsModel extends Model {
       // Either we dont have a record of this module or its out of date, so we retrieve the app meta data.
       // Create a fake security token so that gadgets with signed preloading don't fail to load
       $securityToken = BasicSecurityToken::createFromValues(1, 1, 0, PartuzaConfig::get('container'), urlencode($app_url), 0, 'partuza');
-      var_dump($securityToken);
       $response = $this->fetch_gadget_metadata($app_url, $securityToken);
-      var_dump($response);
-      print_r($response);
       if (! is_object($response) && ! is_array($response)) {
         // invalid json object, something bad happened on the shindig metadata side.
         $error = 'An error occured while retrieving the gadget information';

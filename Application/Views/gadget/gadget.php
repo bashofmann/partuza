@@ -104,6 +104,9 @@ if (! empty($vars['gadget']['error'])) {
         <script type="text/javascript">
           gadgets.rpc.setRelayUrl("remote_iframe_<?php echo $gadget['mod_id']?>", "<?php echo $iframe_url?>");
           gadgets.rpc.setAuthToken("remote_iframe_<?php echo $gadget['mod_id']?>", "<?php echo $rpctoken?>");
+          <?php if(isset($gadget['context'])): ?>
+          gadgets.context.add("remote_iframe_<?php echo $gadget['mod_id']?>", "<?php echo $gadget['context']?>");
+          <?php endif; ?>
         </script>
     </div>
 </div>

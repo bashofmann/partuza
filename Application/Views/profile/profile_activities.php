@@ -3,7 +3,7 @@ if (! count($vars['activities'])) {
   echo "No activities yet.";
 } else {
   $first = true;
-  foreach ($vars['activities'] as $activity) {
+  foreach ($vars['activities'] as $i => $activity) {
     $add = $first ? ' first' : '';
     $first = false;
     echo "<div class=\"activity$add\">\n";
@@ -17,6 +17,35 @@ if (! count($vars['activities'])) {
         }
       }
       echo "</div>";
+    }
+    if (count($activity['embeds'])) {
+      echo "<div style=\"clear:both\">";
+      foreach ($activity['embeds'] as $j => $embed) {
+        echo "<div class=\" ui-corner-all\" style=\"float:left\">";
+        $width = 300;
+        $view = 'embedded';
+        $gadget = array(
+          'id' => '9' . $j . $i,
+          'mod_id' => '9' . $j . $i,
+          'version' => '2.0',
+          'title' => '',
+          'settings' => null,
+          'scrolling' => false,
+          'context' => $embed['context'],
+          'url' => $embed['gadget']
+        );
+        $person = array(
+          'id' => $activity['person_id']
+        );
+        $this->template('/gadget/gadget.php', array(
+          'width' => $width, 
+          'gadget' => $gadget, 
+          'person' => $person, 
+          'view' => $view
+        ));
+        echo "</div>";
+      }
+      
     }
     echo "{$activity['body']}\n";
     echo "</div>";

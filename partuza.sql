@@ -36,6 +36,22 @@ CREATE TABLE `activities` (
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `activity_embeds`
+--
+
+DROP TABLE IF EXISTS `activity_embeds`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `activity_embeds` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `activity_id` int(11) NOT NULL,
+  `gadget` varchar(250) NOT NULL,
+  `context` varchar(250) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `media_items`
 --
 
